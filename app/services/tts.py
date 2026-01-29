@@ -59,8 +59,8 @@ class WyomingProtocol:
                     event_type = event.get("type", "")
                     
                     if event_type == "audio-chunk":
-                        # Audio data follows
-                        payload_length = event.get("data", {}).get("audio", {}).get("length", 0)
+                        # Audio payload length is in the header's payload_length field
+                        payload_length = event.get("payload_length", 0)
                         if payload_length > 0:
                             audio_data = self._receive_payload(sock, payload_length)
                             if audio_data:
