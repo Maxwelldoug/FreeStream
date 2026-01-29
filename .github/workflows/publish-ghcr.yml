@@ -1,12 +1,7 @@
-name: Publish GHCR image
+name: Manual Build & Push (GHCR)
 
 on:
   workflow_dispatch:
-    inputs:
-      branch:
-        description: 'Branch to build (e.g., main)'
-        required: true
-        default: 'main'
 
 permissions:
   contents: read
@@ -14,47 +9,42 @@ permissions:
 
 jobs:
   build-and-push:
-    name: Build and push to GHCR
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.inputs.branch }}
 
-      - name: Set up QEMU
-        uses: docker/setup-qemu-action@v2
+      - name: Compute image tag
+        id: meta
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          OWNER_LOWER="${GITHUB_REPOSITORY_OWNER,,}"
+          REPO_NAME="${GITHUB_REPOSITORY#*/}"
+          REPO_LOWER="${REPO_NAME,,}"
+          REF_TAG="${GITHUB_REF_NAME//\//-}"
+          REF_LOWER="${REF_TAG,,}"
+
+          IMAGE="ghcr.io/${OWNER_LOWER}/${REPO_LOWER}:${REF_LOWER}"
+          echo "image=${IMAGE}" >> "$GITHUB_OUTPUT"
+          echo "Will push: ${IMAGE}"
 
       - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
+        uses: docker/setup-buildx-action@v3
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v2
+      - name: Login to GHCR
+        uses: docker/login-action@v3
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Compute image tags
-        id: vars
-        run: |
-          REF="${{ github.event.inputs.branch }}"
-          if [ -z "$REF" ]; then
-            REF="${{ github.ref_name }}"
-          fi
-          # Sanitize branch name for use as Docker tag: lowercase, replace slashes with '-', and remove invalid characters
-          SANITIZED=$(echo "$REF" | tr '[:upper:]' '[:lower:]' | sed 's#/#-#g' | sed 's/[^a-z0-9._-]/-/g')
-          echo "ref=$REF" >> $GITHUB_OUTPUT
-          echo "ref_tag=$SANITIZED" >> $GITHUB_OUTPUT
-
       - name: Build and push
-        uses: docker/build-push-action@v4
+        uses: docker/build-push-action@v6
         with:
           context: .
-          file: Dockerfile
+          file: ./Dockerfile
           push: true
-          tags: |
-            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:latest
-            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:${{ steps.vars.outputs.ref_tag }}
-            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:${{ github.sha }}
-          platforms: linux/amd64,linux/arm64
+          tags: ${{ steps.meta.outputs.image }}
