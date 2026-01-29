@@ -129,19 +129,22 @@ class TwitchService:
     
     def get_auth_url(self, redirect_uri: str) -> str:
         """Get the OAuth authorization URL."""
+        from urllib.parse import urlencode, quote
+        
         scopes = [
             "bits:read",
             "channel:read:subscriptions",
             "channel:read:redemptions",
         ]
         
-        return (
-            f"{TWITCH_AUTH_URL}/authorize"
-            f"?client_id={self.config.TWITCH_CLIENT_ID}"
-            f"&redirect_uri={redirect_uri}"
-            f"&response_type=code"
-            f"&scope={'+'.join(scopes)}"
-        )
+        params = {
+            "client_id": self.config.TWITCH_CLIENT_ID,
+            "redirect_uri": redirect_uri,
+            "response_type": "code",
+            "scope": " ".join(scopes),
+        }
+        
+        return f"{TWITCH_AUTH_URL}/authorize?{urlencode(params)}"
     
     def exchange_code(self, code: str, redirect_uri: str) -> bool:
         """Exchange authorization code for tokens."""
