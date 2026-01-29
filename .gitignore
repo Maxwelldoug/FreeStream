@@ -74,7 +74,7 @@ data/audio_cache/
 !static/sounds/*.mp3
 
 # PiperTTS models (downloaded at runtime)
-models/
+/models/
 *.onnx
 *.onnx.json
 
