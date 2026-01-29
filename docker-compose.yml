@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   freestream:
-    build: .
+    # Use the GHCR image published from the GitHub Actions workflow.
+    # Replace <OWNER> with your GitHub user/org, e.g. ghcr.io/myorg/freestream:latest
+    image: ghcr.io/<OWNER>/freestream:latest
     ports:
       - "5000:5000"
     volumes:
