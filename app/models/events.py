@@ -188,13 +188,14 @@ class YouTubeSuperChatEvent(StreamEvent):
         """Create from YouTube LiveChat API response."""
         snippet = data.get("snippet", {})
         details = snippet.get("superChatDetails", {})
+        author = data.get("authorDetails", {})
         
         # Extract currency symbol
         amount_display = details.get("amountDisplayString", "$0")
         currency = amount_display[0] if amount_display else "$"
         
         return cls(
-            username=snippet.get("authorChannelId", ""),
+            username=author.get("displayName", ""),
             amount=details.get("amountMicros", 0) / 1_000_000,
             currency=currency,
             message=details.get("userComment", ""),
@@ -216,12 +217,13 @@ class YouTubeSuperStickerEvent(StreamEvent):
         """Create from YouTube LiveChat API response."""
         snippet = data.get("snippet", {})
         details = snippet.get("superStickerDetails", {})
+        author = data.get("authorDetails", {})
         
         amount_display = details.get("amountDisplayString", "$0")
         currency = amount_display[0] if amount_display else "$"
         
         return cls(
-            username=snippet.get("authorChannelId", ""),
+            username=author.get("displayName", ""),
             amount=details.get("amountMicros", 0) / 1_000_000,
             currency=currency,
             sticker_id=details.get("superStickerMetadata", {}).get("stickerId", ""),
@@ -246,6 +248,7 @@ class YouTubeMembershipEvent(StreamEvent):
     def from_livechat(cls, data: dict, is_milestone: bool = False) -> "YouTubeMembershipEvent":
         """Create from YouTube LiveChat API response."""
         snippet = data.get("snippet", {})
+        author = data.get("authorDetails", {})
         
         if is_milestone:
             details = snippet.get("memberMilestoneChatDetails", {})
@@ -257,7 +260,7 @@ class YouTubeMembershipEvent(StreamEvent):
             level = details.get("memberLevelName", "")
         
         return cls(
-            username=snippet.get("authorChannelId", ""),
+            username=author.get("displayName", ""),
             level=level,
             months=months,
             is_milestone=is_milestone,
