@@ -1,3 +1,98 @@
+# =============================================================================
+# Tooling Ignores
+# =============================================================================
+
+# Different users will have different desires for their agent configurations.
+# Code should be judged on its merits without being influenced by personal preferences, 
+# rather than suffering outright rejection due to tooling choices.
+# Therefore, we ignore agent configuration files to avoid bias in code reviews.
+# This does *not* excuse a developer unable to explain what their code does, and low
+# quality code will still be judged as such.
+# For more information, see CONTRIBUTING.md.
+AGENTS.md
+agents/
+.copilot/
+
+# PyCharm
+#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
+#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
+#  and can be added to the global gitignore or merged into this file.  For a more nuclear
+#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
+.idea/
+
+# Abstra
+# Abstra is an AI-powered process automation framework.
+# Ignore directories containing user credentials, local state, and settings.
+# Learn more at https://abstra.io/docs
+.abstra/
+
+# Visual Studio Code
+#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
+#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
+#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
+#  you could uncomment the following to ignore the entire vscode folder
+.vscode/
+
+# Cursor
+#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
+#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
+#  refer to https://docs.cursor.com/context/ignore-files
+.cursorignore
+.cursorindexingignore
+
+# Marimo
+marimo/_static/
+marimo/_lsp/
+__marimo__/
+
+
+
+# =============================================================================
+# FREESTREAM APPLICATION-SPECIFIC
+# =============================================================================
+
+# User Configuration (SENSITIVE - contains API keys and secrets)
+SETTINGS.py
+!SETTINGS.example.py
+
+# OAuth tokens and credentials
+tokens/
+*.token
+*.tokens
+*_token.json
+client_secret*.json
+credentials.json
+
+# Generated audio files (TTS cache)
+audio_cache/
+data/audio_cache/
+*.wav
+*.mp3
+*.ogg
+# Except for intentional static sounds
+!static/sounds/*.wav
+!static/sounds/*.mp3
+
+# PiperTTS models (downloaded at runtime)
+models/
+*.onnx
+*.onnx.json
+
+# Application data directory
+data/
+
+# Session data
+flask_session/
+sessions/
+
+# Docker override files
+docker-compose.override.yml
+docker-compose.override.yaml
+
+# =============================================================================
+# PYTHON STANDARD IGNORES
+# =============================================================================
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -168,40 +263,8 @@ dmypy.json
 # Cython debug symbols
 cython_debug/
 
-# PyCharm
-#  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
-#  be found at https://github.com/github/gitignore/blob/main/Global/JetBrains.gitignore
-#  and can be added to the global gitignore or merged into this file.  For a more nuclear
-#  option (not recommended) you can uncomment the following to ignore the entire idea folder.
-#.idea/
-
-# Abstra
-# Abstra is an AI-powered process automation framework.
-# Ignore directories containing user credentials, local state, and settings.
-# Learn more at https://abstra.io/docs
-.abstra/
-
-# Visual Studio Code
-#  Visual Studio Code specific template is maintained in a separate VisualStudioCode.gitignore 
-#  that can be found at https://github.com/github/gitignore/blob/main/Global/VisualStudioCode.gitignore
-#  and can be added to the global gitignore or merged into this file. However, if you prefer, 
-#  you could uncomment the following to ignore the entire vscode folder
-# .vscode/
-
 # Ruff stuff:
 .ruff_cache/
 
 # PyPI configuration file
 .pypirc
-
-# Cursor
-#  Cursor is an AI-powered code editor. `.cursorignore` specifies files/directories to
-#  exclude from AI features like autocomplete and code analysis. Recommended for sensitive data
-#  refer to https://docs.cursor.com/context/ignore-files
-.cursorignore
-.cursorindexingignore
-
-# Marimo
-marimo/_static/
-marimo/_lsp/
-__marimo__/
