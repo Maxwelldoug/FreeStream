@@ -3,8 +3,8 @@ name: Publish GHCR image
 on:
   workflow_dispatch:
     inputs:
-      ref:
-        description: 'Branch or tag to build (must be "main")'
+      branch:
+        description: 'Branch to build (e.g., main)'
         required: true
         default: 'main'
 
@@ -17,17 +17,10 @@ jobs:
     name: Build and push to GHCR
     runs-on: ubuntu-latest
     steps:
-      - name: Validate selected ref
-        run: |
-          if [ "${{ github.event.inputs.ref }}" != "main" ]; then
-            echo "Error: This workflow must be run against the 'main' branch."
-            exit 1
-          fi
-
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.event.inputs.ref }}
+          ref: ${{ github.event.inputs.branch }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v2
@@ -42,6 +35,18 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Compute image tags
+        id: vars
+        run: |
+          REF="${{ github.event.inputs.branch }}"
+          if [ -z "$REF" ]; then
+            REF="${{ github.ref_name }}"
+          fi
+          # Sanitize branch name for use as Docker tag: lowercase, replace slashes with '-', and remove invalid characters
+          SANITIZED=$(echo "$REF" | tr '[:upper:]' '[:lower:]' | sed 's#/#-#g' | sed 's/[^a-z0-9._-]/-/g')
+          echo "ref=$REF" >> $GITHUB_OUTPUT
+          echo "ref_tag=$SANITIZED" >> $GITHUB_OUTPUT
+
       - name: Build and push
         uses: docker/build-push-action@v4
         with:
@@ -49,6 +54,7 @@ jobs:
           file: Dockerfile
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/freestream:latest
-            ghcr.io/${{ github.repository_owner }}/freestream:${{ github.sha }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:latest
+            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:${{ steps.vars.outputs.ref_tag }}
+            ghcr.io/${{ toLower(github.repository_owner) }}/freestream:${{ github.sha }}
           platforms: linux/amd64,linux/arm64
