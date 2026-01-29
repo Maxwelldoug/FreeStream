@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+  freestream:
+    build: .
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./SETTINGS.py:/app/SETTINGS.py:ro
+      - freestream_data:/app/data
+    depends_on:
+      piper:
+        condition: service_started
+    environment:
+      - TTS_HOST=piper
+      - TTS_PORT=10200
+      - PYTHONUNBUFFERED=1
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  piper:
+    image: rhasspy/wyoming-piper:latest
+    command: --voice en_GB-alan-medium
+    volumes:
+      - piper_models:/data
+    expose:
+      - "10200"
+    restart: unless-stopped
+
+volumes:
+  freestream_data:
+  piper_models:
