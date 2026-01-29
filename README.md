@@ -1,6 +1,6 @@
 # FreeStream - TTS Alert Reader for OBS
 
-A Docker-based Python application that uses PiperTTS to read aloud stream alerts (donations, subscriptions, memberships) from Twitch and YouTube as an OBS Browser Source.
+A Docker-based Python application that uses PiperTTS to read aloud stream alerts (donations, subscriptions, memberships) from Twitch and YouTube as an OBS Browser Source. More features to come.
 
 ## Overview
 
