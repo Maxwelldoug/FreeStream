@@ -160,17 +160,18 @@ class YouTubeService:
     
     def get_auth_url(self, redirect_uri: str) -> str:
         """Get the OAuth authorization URL."""
-        scopes = "+".join(YOUTUBE_SCOPES)
+        from urllib.parse import urlencode
         
-        return (
-            f"{GOOGLE_AUTH_URL}"
-            f"?client_id={self.config.YOUTUBE_CLIENT_ID}"
-            f"&redirect_uri={redirect_uri}"
-            f"&response_type=code"
-            f"&scope={scopes}"
-            f"&access_type=offline"
-            f"&prompt=consent"
-        )
+        params = {
+            "client_id": self.config.YOUTUBE_CLIENT_ID,
+            "redirect_uri": redirect_uri,
+            "response_type": "code",
+            "scope": " ".join(YOUTUBE_SCOPES),
+            "access_type": "offline",
+            "prompt": "consent",
+        }
+        
+        return f"{GOOGLE_AUTH_URL}?{urlencode(params)}"
     
     def exchange_code(self, code: str, redirect_uri: str) -> bool:
         """Exchange authorization code for tokens."""
