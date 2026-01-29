@@ -1,0 +1,139 @@
+/* FreeStream - OBS Browser Source Overlay Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background: var(--background-color, transparent);
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+}
+
+.overlay-container {
+    position: fixed;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.overlay-container.position-top {
+    top: 0;
+    align-items: flex-start;
+}
+
+.overlay-container.position-center {
+    top: 50%;
+    transform: translateY(-50%);
+    align-items: center;
+}
+
+.overlay-container.position-bottom {
+    bottom: 0;
+    align-items: flex-end;
+}
+
+.alert-box {
+    font-family: var(--font-family, 'Roboto', Arial, sans-serif);
+    font-size: var(--font-size, 24px);
+    color: var(--text-color, #FFFFFF);
+    text-shadow: var(--text-shadow, 2px 2px 4px rgba(0, 0, 0, 0.8));
+    padding: 15px 25px;
+    border-radius: 8px;
+    max-width: 80%;
+    text-align: center;
+    transition: opacity var(--animation-duration, 300ms) ease,
+        transform var(--animation-duration, 300ms) ease;
+}
+
+.alert-box.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Animation styles */
+.alert-box.animation-fade.hidden {
+    opacity: 0;
+}
+
+.alert-box.animation-fade.visible {
+    opacity: 1;
+}
+
+.alert-box.animation-slide-up.hidden {
+    opacity: 0;
+    transform: translateY(50px);
+}
+
+.alert-box.animation-slide-up.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.alert-box.animation-slide-down.hidden {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
+.alert-box.animation-slide-down.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.alert-box.animation-slide-left.hidden {
+    opacity: 0;
+    transform: translateX(50px);
+}
+
+.alert-box.animation-slide-left.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.alert-box.animation-slide-right.hidden {
+    opacity: 0;
+    transform: translateX(-50px);
+}
+
+.alert-box.animation-slide-right.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.alert-box.animation-none.hidden {
+    display: none;
+}
+
+.alert-box.animation-none.visible {
+    display: block;
+}
+
+.alert-text {
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+/* Platform-specific styling */
+.alert-box.platform-twitch {
+    /* Twitch purple accent - can be customized */
+}
+
+.alert-box.platform-youtube {
+    /* YouTube red accent - can be customized */
+}
+
+/* Event type specific styling */
+.alert-box.event-bits,
+.alert-box.event-superchat {
+    /* Donation styling */
+}
+
+.alert-box.event-sub,
+.alert-box.event-membership {
+    /* Subscription styling */
+}

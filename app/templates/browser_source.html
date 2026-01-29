@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreeStream Alert Overlay</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/overlay.css') }}">
+    <style>
+        :root {
+                {
+                % for key,
+                value in css_vars.items() %
+            }
+
+                {
+                    {
+                    key
+                }
+            }
+
+            : {
+                    {
+                    value
+                }
+            }
+
+            ;
+
+                {
+                % endfor %
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div id="overlay-container" class="overlay-container position-{{ config.OVERLAY_TEXT_POSITION }}">
+        <div id="alert-box" class="alert-box hidden">
+            <div id="alert-text" class="alert-text"></div>
+        </div>
+    </div>
+
+    <!-- Audio element for TTS playback -->
+    <audio id="tts-audio" preload="auto"></audio>
+
+    <script src="https://cdn.socket.io/4.6.0/socket.io.min.js"></script>
+    <script>
+        // Configuration from server
+        const CONFIG = {
+            showText: {{ config.OVERLAY_SHOW_TEXT | tojson }},
+        textDuration: { { config.OVERLAY_TEXT_DURATION } },
+        animation: { { config.OVERLAY_ANIMATION | tojson } },
+        animationDuration: { { config.OVERLAY_ANIMATION_DURATION } }
+        };
+    </script>
+    <script src="{{ url_for('static', filename='js/overlay.js') }}"></script>
+</body>
+
+</html>
